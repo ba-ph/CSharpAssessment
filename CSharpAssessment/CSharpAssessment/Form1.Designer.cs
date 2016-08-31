@@ -46,36 +46,97 @@ namespace CSharpAssessment
         /// </summary>
         /// 
 
+
+        public void DeserializeTreeImage(string a_treeName, int a_num)
+        {
+            //List<PictureBox> deserializePictureBoxes = new List<PictureBox>();
+            List<Point> deserializeLocations = new List<Point>();
+
+            //create a streamwriter to write to file
+            try
+            {
+                //StreamReader picBoxReader = new StreamReader(a_treeName + "PictureBoxes.xml");
+                StreamReader locationsReader = new StreamReader(a_treeName + "Locations.xml");
+
+            }
+            catch (FileNotFoundException e)
+            {
+                MessageBox.Show("Tree not found! " + e.FileName);
+                return;
+            }
+
+            // StreamReader picBoxConfirmed = new StreamReader(a_treeName + "PictureBoxes.xml");
+            StreamReader locationsConfirmed = new StreamReader(a_treeName + "Locations.xml");
+
+            //create an XMLSerializer to serialize
+            //XmlSerializer picBoxSerializer = new XmlSerializer(typeof(List<PictureBox>));
+            XmlSerializer locationsSerializer = new XmlSerializer(typeof(List<Point>));
+
+            //serialize
+            if (a_num == 4)
+            {
+                //deserializePictureBoxes = picBoxSerializer.Deserialize(picBoxConfirmed) as List<PictureBox>;
+                deserializeLocations = locationsSerializer.Deserialize(locationsConfirmed) as List<Point>;
+
+                imageNodeList.Clear();
+                foreach (Point point in deserializeLocations)
+                {
+                    imageNodeList.Add(new ImageNode("test", point, null, 0));
+                }
+            }
+
+            //close writer
+            //picBoxConfirmed.Close();
+            locationsConfirmed.Close();
+        }
+
+
         public void DeserializeArray(string a_treeName, int a_num)
         {
             List<string> compositeNodes = new List<string>();
             List<string> decoratorNodes = new List<string>();
             List<string> leafNodes = new List<string>();
 
+
             //create a streamwriter to write to file
-            StreamReader reader = new StreamReader(a_treeName);
+            try
+            {
+                StreamReader reader = new StreamReader(a_treeName);
+            }
+            catch (FileNotFoundException e)
+            {
+                MessageBox.Show("Tree not found! " + e.FileName);
+                return;
+            }
+
+
+            StreamReader readerConfirmed = new StreamReader(a_treeName);
 
             //create an XMLSerializer to serialize
             XmlSerializer serializer = new XmlSerializer(typeof(List<string>));
 
             //serialize
-            switch(a_num){
-                case 1:{
-                        compositeNodes = serializer.Deserialize(reader) as List<string>;
+            switch (a_num)
+            {
+                case 1:
+                    {
+                        compositeNodes = serializer.Deserialize(readerConfirmed) as List<string>;
 
                         compositeOne = compositeNodes[0];
                         compositeTwo = compositeNodes[1];
                         break;
                     }
-                case 2:{
-                        decoratorNodes = serializer.Deserialize(reader) as List<string>;
+                case 2:
+                    {
+                        decoratorNodes = serializer.Deserialize(readerConfirmed) as List<string>;
 
                         decoratorOne = decoratorNodes[0];
                         decoratorTwo = decoratorNodes[1];
                         break;
                     }
-                case 3:{
-                        leafNodes = serializer.Deserialize(reader) as List<string>;
+                case 3:
+                    {
+                        leafNodes = serializer.Deserialize(readerConfirmed) as List<string>;
                         leafOne = leafNodes[0];
                         leafTwo = leafNodes[1];
                         leafThree = leafNodes[2];
@@ -87,9 +148,9 @@ namespace CSharpAssessment
                 default:
                     break;
             }
- 
+
             //close writer
-            reader.Close();
+            readerConfirmed.Close();
         }
 
         public void SerializeArray(string a_path, List<string> a_node)
@@ -107,16 +168,48 @@ namespace CSharpAssessment
             writer.Close();
         }
 
+
+        public void SerializeTreeImages(string a_path, List<Image> a_pictureBoxImages)
+        {
+            StreamWriter imageWriter = new StreamWriter(a_path + "PictureBoxes.xml");
+
+            XmlSerializer imageSerializer = new XmlSerializer(typeof(List<Image>));
+
+            imageSerializer.Serialize(imageWriter, a_pictureBoxImages);
+
+            imageWriter.Close();
+        }
+
+        public void SerializeNodeLocations(string a_path, List<Point> a_locations)
+        {
+            //create a streamwriter to write to file
+            StreamWriter locationsWriter = new StreamWriter(a_path + "Locations.xml");
+
+            //create an XMLSerializer to serialize
+            XmlSerializer locationsSerializer = new XmlSerializer(typeof(List<Point>));
+
+            //serialize
+            locationsSerializer.Serialize(locationsWriter, a_locations);
+
+            //close writer
+            locationsWriter.Close();
+        }
+
         public void DeserializeForm(string a_treeName)
         {
             DeserializeArray(a_treeName + "CompositeNodes.xml", 1);
             DeserializeArray(a_treeName + "DecoratorNodes.xml", 2);
             DeserializeArray(a_treeName + "LeafNodes.xml", 3);
+            DeserializeTreeImage(a_treeName, 4);
         }
 
 
         public void SerializeForm(string a_path)
         {
+            List<Image> pictureBoxImages = new List<Image>();
+            List<Point> nodeLocations = new List<Point>();
+
+
             List<string> compositeNodes = new List<string>();
             List<string> decoratorNodes = new List<string>();
             List<string> leafNodes = new List<string>();
@@ -134,9 +227,21 @@ namespace CSharpAssessment
             leafNodes.Add(leafFive);
             leafNodes.Add(leafSix);
 
+            // Loop through all the current nodes in the tree view and add them
+            //to the array for serialization
+            foreach (ImageNode node in imageNodeList)
+            {
+                pictureBoxImages.Add(node.getPicBox().Image);
+                nodeLocations.Add(node.m_location);
+            }
+
             SerializeArray(a_path + "CompositeNodes.xml", compositeNodes);
             SerializeArray(a_path + "DecoratorNodes.xml", decoratorNodes);
             SerializeArray(a_path + "LeafNodes.xml", leafNodes);
+
+
+            SerializeNodeLocations(a_path, nodeLocations);
+            // SerializeTreeImages(a_path, pictureBoxImages);
         }
 
 
@@ -221,10 +326,13 @@ namespace CSharpAssessment
             // panel1
             // 
             this.panel1.AllowDrop = true;
+            this.panel1.BackColor = System.Drawing.Color.Silver;
+            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.panel1.Location = new System.Drawing.Point(172, 51);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(952, 619);
             this.panel1.TabIndex = 6;
+            this.panel1.Click += new System.EventHandler(this.panel1_Click);
             this.panel1.DragDrop += new System.Windows.Forms.DragEventHandler(this.panel1_DragDrop);
             this.panel1.DragOver += new System.Windows.Forms.DragEventHandler(this.panel1_DragOver);
             // 
@@ -285,7 +393,7 @@ namespace CSharpAssessment
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.ClientSize = new System.Drawing.Size(1274, 682);
+            this.ClientSize = new System.Drawing.Size(1274, 681);
             this.Controls.Add(this.leafTextBox);
             this.Controls.Add(this.decoratorTextBox);
             this.Controls.Add(this.compositeTextBox);
@@ -318,7 +426,7 @@ namespace CSharpAssessment
         private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
         private System.Windows.Forms.ListBox leafList;
-        private System.Windows.Forms.Panel panel1;
+        public System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.ListBox compositeList;
         private System.Windows.Forms.ListBox decoratorList;
         private System.Windows.Forms.RichTextBox compositeTextBox;

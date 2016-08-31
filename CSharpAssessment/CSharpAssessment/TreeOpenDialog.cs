@@ -25,6 +25,7 @@ namespace CSharpAssessment
             form.compositeNodeList.Clear();
             form.decoratorNodeList.Clear();
             form.leafNodeList.Clear();
+            form.panel1.Controls.Clear();
 
 
 
@@ -40,6 +41,7 @@ namespace CSharpAssessment
                 form.compositeNodeList.Clear();
                 form.decoratorNodeList.Clear();
                 form.leafNodeList.Clear();
+                form.panel1.Controls.Clear();
                 form.newTreeOpened = true;
                 this.Close();
             }

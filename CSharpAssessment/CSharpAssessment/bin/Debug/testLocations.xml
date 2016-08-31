@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfPoint xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Point>
+    <X>173</X>
+    <Y>75</Y>
+  </Point>
+  <Point>
+    <X>277</X>
+    <Y>234</Y>
+  </Point>
+</ArrayOfPoint>

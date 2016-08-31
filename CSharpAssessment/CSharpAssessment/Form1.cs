@@ -10,21 +10,27 @@ using System.Windows.Forms;
 using System.Xml.Serialization;
 using System.IO;
 using CSharpAssessment.Properties;
+using System.Runtime.Serialization;
 
 namespace CSharpAssessment
 {
     public partial class Form1 : Form
     {
         NewTreeDialog newTreeDialog = null;
+        ImageNode currentSelectedNode;
+        ImageNode currentSelectedParentNode;
+        public int NodeCount = 0;
 
         public class ImageNode
         {
-            public ImageNode(string a_nodeName, Point a_location, Image a_nodeImage)
+            public ImageNode(string a_nodeName, Point a_location, Image a_nodeImage, int a_nodeId)
             {
                 m_children = new List<ImageNode>();
                 m_pictureBox = new PictureBox();
+                m_pictureBox.Name = "node" + a_nodeId;
 
-                m_nodeName = a_nodeName;
+                m_nodeId = a_nodeId;
+                NodeName = a_nodeName;
                 this.NodeLocation = a_location;
 
                 m_pictureBox.SizeMode = PictureBoxSizeMode.Zoom;
@@ -32,17 +38,24 @@ namespace CSharpAssessment
                 m_pictureBox.Location = a_location;
             }
 
-            private Point m_location;
+            public int m_nodeId;
+            public int getNodeID()
+            {
+                return m_nodeId;
+            }
+
+            public Point m_location;
             public Point NodeLocation
             {
                 get; set;
             }
 
-            private List<ImageNode> m_children;
+            public List<ImageNode> m_children;
 
             public void addChild(ImageNode a_newChild)
             {
                 m_children.Add(a_newChild);
+                a_newChild.setLocation(new Point(this.m_location.X, this.m_location.Y + 45));
             }
 
             public void removeChild(ImageNode a_newChild)
@@ -55,7 +68,7 @@ namespace CSharpAssessment
                 m_children.Clear();
             }
 
-            private string m_nodeName;
+            public string m_nodeName;
             public string NodeName
             {
                 get; set;
@@ -66,7 +79,7 @@ namespace CSharpAssessment
                 return m_nodeName;
             }
 
-            private PictureBox m_pictureBox;
+            public PictureBox m_pictureBox;
 
             public void addImage(Image a_newImage)
             {
@@ -93,9 +106,16 @@ namespace CSharpAssessment
 
             public void setLocation(Point a_location)
             {
+                NodeLocation = a_location;
                 m_location = a_location;
-            }
+                m_pictureBox.Location = a_location;
 
+                //Everytime a node is moved, update it's children's positions if it has any
+                foreach (ImageNode child in m_children)
+                {
+                    child.setLocation(new Point(m_location.X, m_location.Y + 55));
+                }
+            }
         }
 
 
@@ -120,7 +140,7 @@ namespace CSharpAssessment
 
 
         public object lb_item = null;
-        List<ImageNode> imageNodeList = new List<ImageNode>();
+        public List<ImageNode> imageNodeList = new List<ImageNode>();
 
         private void leafList_DragLeave(object sender, EventArgs e)
         {
@@ -237,9 +257,12 @@ namespace CSharpAssessment
                         temp = Image.FromStream(stream);
                     }
 
-                    ImageNode newNode = new ImageNode("SelectorNode", mouseDropPos, temp);
+                    ImageNode newNode = new ImageNode("SelectorNode", mouseDropPos, temp, NodeCount);
+                    NodeCount += 1;
                     newNode.setPicBoxParent(panel1);
                     newNode.getPicBox().BringToFront();
+                    newNode.setLocation(mouseDropPos);
+                    newNode.getPicBox().Location = newNode.NodeLocation;
 
                     imageNodeList.Add(newNode);
                 }
@@ -252,9 +275,11 @@ namespace CSharpAssessment
                         temp = Image.FromStream(stream);
                     }
 
-                    ImageNode newNode = new ImageNode("SequenceNode", mouseDropPos, temp);
+                    ImageNode newNode = new ImageNode("SequenceNode", mouseDropPos, temp, NodeCount);
+                    NodeCount += 1;
                     newNode.setPicBoxParent(panel1);
                     newNode.getPicBox().BringToFront();
+                    newNode.setLocation(mouseDropPos);
                     newNode.getPicBox().Location = newNode.NodeLocation;
 
                     imageNodeList.Add(newNode);
@@ -268,9 +293,11 @@ namespace CSharpAssessment
                         temp = Image.FromStream(stream);
                     }
 
-                    ImageNode newNode = new ImageNode("RepeaterNode", mouseDropPos, temp);
+                    ImageNode newNode = new ImageNode("RepeaterNode", mouseDropPos, temp, NodeCount);
+                    NodeCount += 1;
                     newNode.setPicBoxParent(panel1);
                     newNode.getPicBox().BringToFront();
+                    newNode.setLocation(mouseDropPos);
                     newNode.getPicBox().Location = newNode.NodeLocation;
 
                     imageNodeList.Add(newNode);
@@ -284,9 +311,11 @@ namespace CSharpAssessment
                         temp = Image.FromStream(stream);
                     }
 
-                    ImageNode newNode = new ImageNode("MaximumNode", mouseDropPos, temp);
+                    ImageNode newNode = new ImageNode("MaximumNode", mouseDropPos, temp, NodeCount);
+                    NodeCount += 1;
                     newNode.setPicBoxParent(panel1);
                     newNode.getPicBox().BringToFront();
+                    newNode.setLocation(mouseDropPos);
                     newNode.getPicBox().Location = newNode.NodeLocation;
 
                     imageNodeList.Add(newNode);
@@ -300,9 +329,11 @@ namespace CSharpAssessment
                         temp = Image.FromStream(stream);
                     }
 
-                    ImageNode newNode = new ImageNode("WanderNode", mouseDropPos, temp);
+                    ImageNode newNode = new ImageNode("WanderNode", mouseDropPos, temp, NodeCount);
+                    NodeCount += 1;
                     newNode.setPicBoxParent(panel1);
                     newNode.getPicBox().BringToFront();
+                    newNode.setLocation(mouseDropPos);
                     newNode.getPicBox().Location = newNode.NodeLocation;
 
                     imageNodeList.Add(newNode);
@@ -316,9 +347,11 @@ namespace CSharpAssessment
                         temp = Image.FromStream(stream);
                     }
 
-                    ImageNode newNode = new ImageNode("WalkNode", mouseDropPos, temp);
+                    ImageNode newNode = new ImageNode("WalkNode", mouseDropPos, temp, NodeCount);
+                    NodeCount += 1;
                     newNode.setPicBoxParent(panel1);
                     newNode.getPicBox().BringToFront();
+                    newNode.setLocation(mouseDropPos);
                     newNode.getPicBox().Location = newNode.NodeLocation;
 
                     imageNodeList.Add(newNode);
@@ -332,9 +365,11 @@ namespace CSharpAssessment
                         temp = Image.FromStream(stream);
                     }
 
-                    ImageNode newNode = new ImageNode("RunNode", mouseDropPos, temp);
+                    ImageNode newNode = new ImageNode("RunNode", mouseDropPos, temp, NodeCount);
+                    NodeCount += 1;
                     newNode.setPicBoxParent(panel1);
                     newNode.getPicBox().BringToFront();
+                    newNode.setLocation(mouseDropPos);
                     newNode.getPicBox().Location = newNode.NodeLocation;
 
                     imageNodeList.Add(newNode);
@@ -348,9 +383,11 @@ namespace CSharpAssessment
                         temp = Image.FromStream(stream);
                     }
 
-                    ImageNode newNode = new ImageNode("OpenDoorNode", mouseDropPos, temp);
+                    ImageNode newNode = new ImageNode("OpenDoorNode", mouseDropPos, temp, NodeCount);
+                    NodeCount += 1;
                     newNode.setPicBoxParent(panel1);
                     newNode.getPicBox().BringToFront();
+                    newNode.setLocation(mouseDropPos);
                     newNode.getPicBox().Location = newNode.NodeLocation;
 
                     imageNodeList.Add(newNode);
@@ -364,9 +401,11 @@ namespace CSharpAssessment
                         temp = Image.FromStream(stream);
                     }
 
-                    ImageNode newNode = new ImageNode("FleeNode", mouseDropPos, temp);
+                    ImageNode newNode = new ImageNode("FleeNode", mouseDropPos, temp, NodeCount);
+                    NodeCount += 1;
                     newNode.setPicBoxParent(panel1);
                     newNode.getPicBox().BringToFront();
+                    newNode.setLocation(mouseDropPos);
                     newNode.getPicBox().Location = newNode.NodeLocation;
 
                     imageNodeList.Add(newNode);
@@ -380,9 +419,11 @@ namespace CSharpAssessment
                         temp = Image.FromStream(stream);
                     }
 
-                    ImageNode newNode = new ImageNode("FindEntranceNode", mouseDropPos, temp);
+                    ImageNode newNode = new ImageNode("FindEntranceNode", mouseDropPos, temp, NodeCount);
+                    NodeCount += 1;
                     newNode.setPicBoxParent(panel1);
                     newNode.getPicBox().BringToFront();
+                    newNode.setLocation(mouseDropPos);
                     newNode.getPicBox().Location = newNode.NodeLocation;
 
                     imageNodeList.Add(newNode);
@@ -396,9 +437,11 @@ namespace CSharpAssessment
                         temp = Image.FromStream(stream);
                     }
 
-                    ImageNode newNode = new ImageNode("AttackNode", mouseDropPos, temp);
+                    ImageNode newNode = new ImageNode("AttackNode", mouseDropPos, temp, NodeCount);
+                    NodeCount += 1;
                     newNode.setPicBoxParent(panel1);
                     newNode.getPicBox().BringToFront();
+                    newNode.setLocation(mouseDropPos);
                     newNode.getPicBox().Location = newNode.NodeLocation;
 
                     imageNodeList.Add(newNode);
@@ -539,6 +582,116 @@ namespace CSharpAssessment
         {
             TreeOpenDialog treeOpenDialog = new TreeOpenDialog(this);
             treeOpenDialog.Show();
+        }
+
+        private void panel1_Click(object sender, EventArgs e)
+        {
+            Point mouseLocation = panel1.PointToClient(System.Windows.Forms.Control.MousePosition);
+            //If a node has already been selected move it to the current mouse pos
+            if (currentSelectedNode != null)
+            {
+                currentSelectedNode.setLocation(mouseLocation);
+                currentSelectedNode.NodeLocation = mouseLocation;
+
+                currentSelectedNode = null;
+                panel1.Invalidate();
+                return;
+            }
+
+            ImageNode temp = getCloestImageNode(mouseLocation);
+
+            if (temp != null)
+            {
+                currentSelectedNode = temp;
+            }
+        }
+
+        private ImageNode getCloestImageNode(Point a_mousePos)
+        {
+            foreach (ImageNode node in imageNodeList)
+            {
+                if (Math.Sqrt(Math.Pow(a_mousePos.X - node.NodeLocation.X, 2) + Math.Pow(a_mousePos.Y - node.NodeLocation.Y, 2)) < 150.0f)
+                {
+                    return node;
+                }
+            }
+            return null;
+        }
+
+        protected override bool ProcessDialogKey(Keys keyData)
+        {
+            if (keyData == Keys.P)
+            {
+                if (currentSelectedParentNode != null)
+                {
+                    ImageNode temp = getCloestImageNode(panel1.PointToClient(System.Windows.Forms.Control.MousePosition));
+                    //assume mouse is over object we want to child to currentSelectedParentNode
+                    if (temp != null)
+                    {
+                        currentSelectedParentNode.addChild(temp);
+                        currentSelectedParentNode = null;
+                        return base.ProcessDialogKey(keyData);
+                    }
+                    return base.ProcessDialogKey(keyData);
+                }
+
+                else if (currentSelectedNode == null)
+                {
+                    //get a new node that we want to add a child to
+                    ImageNode temp = getCloestImageNode(panel1.PointToClient(System.Windows.Forms.Control.MousePosition));
+
+                    if (temp != null)
+                    {
+                        currentSelectedParentNode = temp;
+                    }
+                    return base.ProcessDialogKey(keyData);
+                }
+
+                else
+                {
+                    MessageBox.Show("Error in previewKeyDown");
+                }
+            }
+
+            if (keyData == Keys.D)
+            { 
+                //find the closest node to the mouse
+                //has to be done before dialog box so that the panel is still active
+                ImageNode temp = getCloestImageNode(panel1.PointToClient(System.Windows.Forms.Control.MousePosition));
+
+                DialogResult dialogResult = MessageBox.Show("Are you sure you want to delete this node?", "Delete Node", MessageBoxButtons.YesNo);
+                if (dialogResult == DialogResult.Yes)
+                {
+                    //assume mouse is over object we want to delete
+                    if (temp != null)
+                    {
+                        panel1.Controls.Remove(temp.getPicBox());
+                        //Search through array till we find the node so we can null it
+                        for (int i = 0; i < imageNodeList.Count(); i++)
+                        {
+                            if (imageNodeList[i] == temp)
+                            {
+                                imageNodeList[i] = null;
+                            }
+                        }
+
+                        imageNodeList.Remove(temp);
+                        return base.ProcessDialogKey(keyData);
+                    }
+                }
+                else if (dialogResult == DialogResult.No)
+                {
+                    return base.ProcessDialogKey(keyData);
+                }
+
+                else
+                {
+                    MessageBox.Show("Error in previewKeyDown");
+                    return base.ProcessDialogKey(keyData);
+                }
+            }
+
+            return base.ProcessDialogKey(keyData);
         }
     }
 }

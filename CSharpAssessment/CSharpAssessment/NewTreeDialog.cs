@@ -18,6 +18,7 @@ namespace CSharpAssessment
         {
             this.form1 = a_form1;
             InitializeComponent();
+            form1.panel1.Controls.Clear();
         }
 
         private void newTreeDialogOkButton_Click(object sender, EventArgs e)
@@ -25,6 +26,7 @@ namespace CSharpAssessment
             form1.compositeNodeList.Clear();
             form1.decoratorNodeList.Clear();
             form1.leafNodeList.Clear();
+            
 
             form1.compositeOne = null;
             form1.compositeTwo = null;

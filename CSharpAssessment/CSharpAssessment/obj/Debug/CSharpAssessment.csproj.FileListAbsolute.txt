@@ -57,3 +57,15 @@ C:\Users\james\Desktop\CSharpAssessment\CSharpAssessment\obj\Debug\CSharpAssessm
 C:\Users\james\Desktop\CSharpAssessment\CSharpAssessment\obj\Debug\CSharpAssessment.csproj.GenerateResource.Cache
 C:\Users\james\Desktop\CSharpAssessment\CSharpAssessment\obj\Debug\CSharpAssessment.exe
 C:\Users\james\Desktop\CSharpAssessment\CSharpAssessment\obj\Debug\CSharpAssessment.pdb
+C:\Users\james\Documents\Github\CSharpAssessment\CSharpAssessment\CSharpAssessment\bin\Debug\CSharpAssessment.exe.config
+C:\Users\james\Documents\Github\CSharpAssessment\CSharpAssessment\CSharpAssessment\obj\Debug\CSharpAssessment.exe
+C:\Users\james\Documents\Github\CSharpAssessment\CSharpAssessment\CSharpAssessment\obj\Debug\CSharpAssessment.pdb
+C:\Users\james\Documents\Github\CSharpAssessment\CSharpAssessment\CSharpAssessment\bin\Debug\CSharpAssessment.exe
+C:\Users\james\Documents\Github\CSharpAssessment\CSharpAssessment\CSharpAssessment\bin\Debug\CSharpAssessment.pdb
+C:\Users\james\Documents\Github\CSharpAssessment\CSharpAssessment\CSharpAssessment\obj\Debug\CSharpAssessment.csprojResolveAssemblyReference.cache
+C:\Users\james\Documents\Github\CSharpAssessment\CSharpAssessment\CSharpAssessment\obj\Debug\CSharpAssessment.Form1.resources
+C:\Users\james\Documents\Github\CSharpAssessment\CSharpAssessment\CSharpAssessment\obj\Debug\CSharpAssessment.NewTreeDialog.resources
+C:\Users\james\Documents\Github\CSharpAssessment\CSharpAssessment\CSharpAssessment\obj\Debug\CSharpAssessment.Properties.Resources.resources
+C:\Users\james\Documents\Github\CSharpAssessment\CSharpAssessment\CSharpAssessment\obj\Debug\CSharpAssessment.TreeOpenDialog.resources
+C:\Users\james\Documents\Github\CSharpAssessment\CSharpAssessment\CSharpAssessment\obj\Debug\CSharpAssessment.Tree_Save_Name.resources
+C:\Users\james\Documents\Github\CSharpAssessment\CSharpAssessment\CSharpAssessment\obj\Debug\CSharpAssessment.csproj.GenerateResource.Cache
